@@ -45,17 +45,57 @@ body {
   height: calc(100vh - 50px);
 }
 
+/* Difficulty Navbar Container */
+.difficulty-navbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #f0f0f0; /* Background color for the navbar */
+  width: 100%; /* Full width of the game box */
+  padding: 10px 0;
+  border-radius: 8px 8px 0 0; /* Rounded corners at the top */
+  box-sizing: border-box;
+  margin-bottom: 30px; /* Space between navbar and game title */
+  border-bottom: 1px solid #3a3b3b;
+}
+
+/* Individual Difficulty Buttons */
+.difficulty-button {
+  background-color: transparent; /* Transparent to match navbar */
+  color: rgb(126, 121, 121);
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.difficulty-button:hover {
+  background-color: rgba(44, 44, 44, 0.2); /* Slight hover effect */
+}
+
+#intermediateButton.locked,
+#hardButton.locked {
+  color: #888; /* Dimmed text color */
+  cursor: not-allowed; /* Disabled pointer style */
+  opacity: 0.5; /* Reduced opacity */
+}
+
+/* Updated Game Box */
 .game-box {
   background-color: #f0f0f0;
-  padding: 40px; /* Increased padding for a bigger box */
-  border-radius: 8px;
+  padding: 0 0 5px 0; /* Removed padding at the top */
+  border-radius: 8px; /* Updated radius for compatibility with navbar */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
-  width: 300px; /* Set a fixed width */
+  width: 400px; /* Set a fixed width */
   display: flex;
   flex-direction: column;
   justify-content: center; /* Ensure vertical centering */
   align-items: center; /* Ensure horizontal centering */
+  overflow: visible; /* Allow overflow content to be visible */
 }
 
 .game-title {
@@ -64,14 +104,51 @@ body {
   margin-bottom: 10px;
 }
 
-.game-subtitle {
+/* .game-subtitle {
   margin-bottom: 20px;
   font-size: 16px;
   color: #555;
+} */
+
+.game-subtitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  position: relative;
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+.info-icon {
+  width: 16px;
+  height: 16px;
+  margin-left: 8px;
+  cursor: pointer;
+}
+.info-modal {
+  display: none;
+  position: absolute;
+  bottom: 120%; /* Move the modal above the icon */
+  left: 100%; /* Align it to the right of the icon */
+  transform: translateX(10px); /* Add some spacing to the right */
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 14px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+.info-icon:hover .info-modal,
+.info-icon.active .info-modal {
+  display: block;
 }
 
 .input-container {
-  width: 100%; /* Ensures it stretches across the game-box */
+  width: 80%; /* Ensures it stretches across the game-box */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -97,7 +174,7 @@ body {
   padding: 10px;
   font-family: monospace;
   white-space: pre-wrap;
-  width: 100%; /* Matches the input width */
+  width: 80%; /* Matches the input width */
 }
 
 .how-it-works {
@@ -171,7 +248,12 @@ body {
   text-align: center;
   animation: pop-in 0.5s ease-in-out;
 }
-
+.next-stage-message {
+  font-size: 2rem; /* Smaller font size */
+  color: white; /* Optional: lighter color for secondary text */
+  margin-top: 10px; /* Add spacing from the main message */
+  text-align: center; /* Ensure proper alignment */
+}
 /* Pop-in animation for message */
 @keyframes pop-in {
   0% {
