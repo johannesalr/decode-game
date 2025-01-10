@@ -1,6 +1,13 @@
 const guessInput = document.getElementById("guessInput");
 const feedbackBox = document.getElementById("feedbackBox");
 
+fetch("navbar.html")
+  .then((response) => response.text())
+  .then((data) => {
+    document.getElementById("navbar").innerHTML = data;
+  })
+  .catch((error) => console.error("Error loading navbar:", error));
+
 // Game Variables
 const code = generateCode(4); // Generate a random 4-character code
 let attempts = 0;
@@ -20,7 +27,8 @@ guessInput.addEventListener("keydown", (event) => {
 
 // Function to Generate Random Code
 function generateCode(length) {
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  //   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const characters = "0123456789";
   let result = "";
   for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * characters.length);
