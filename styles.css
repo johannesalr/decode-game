@@ -5,45 +5,57 @@ body {
   overflow: hidden;
 }
 
-.top-bar {
-  background-color: #4682b4; /* Replace with your preferred color */
-  padding: 10px 0;
-  text-align: center;
-  color: white;
-  font-weight: bold;
+.nav-menu {
+  position: fixed; /* Fix the menu to the screen */
+  top: 0;
+  left: -100%; /* Start off-screen to the left */
+  height: 100%; /* Full height for the menu */
+  width: 250px; /* Set the width of the menu */
+  background-color: #4682b4; /* Background color */
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
+  justify-content: start;
+  padding-top: 20px;
+  transition: left 0.3s ease-in-out; /* Smooth slide-in effect */
+  z-index: 1000; /* Ensure it’s above other elements */
 }
-/* Style for labels in the top-bar */
-.label {
+
+.nav-menu.active {
+  left: 0; /* Slide into view */
+}
+
+.nav-link {
   color: white;
+  text-decoration: none;
+  padding: 10px 20px;
   font-size: 1.2rem;
-  padding: 10px;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Highlight on hover */
+}
+
+.hamburger-menu {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: rgb(70, 70, 70);
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  padding: 5px 10px;
 }
-
-/* Remove default link styles for the anchor tag */
-#navLink {
-  text-decoration: none; /* Removes underline effect */
-}
-
-/* Custom hover effect for the labels */
-.label:hover {
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.2
-  ); /* Slightly change the background on hover */
-  color: #f0f0f0; /* Change text color on hover */
-}
-
 .container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: calc(100vh - 50px);
+}
+
+#timer {
+  margin-bottom: 10px; /* Add spacing between the timer and the game box */
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
 }
 
 /* Difficulty Navbar Container */
@@ -297,5 +309,95 @@ body {
   100% {
     transform: scale(1);
     opacity: 1;
+  }
+}
+
+/* Responsive styles for mobile devices */
+@media (max-width: 768px) {
+  .info-modal {
+    white-space: normal;
+  }
+  .top-bar {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .label {
+    font-size: 1rem;
+    padding: 5px;
+  }
+
+  .game-box {
+    width: 85%;
+    padding: 10px;
+  }
+
+  .game-title {
+    font-size: 1.2rem;
+  }
+
+  .game-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .guess-input {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+
+  .feedback-box {
+    height: 100px;
+    font-size: 0.9rem;
+  }
+
+  .tooltip {
+    font-size: 0.9rem;
+    padding: 10px;
+    max-width: 90%;
+  }
+
+  .win-message {
+    font-size: 2rem;
+  }
+
+  .next-stage-message {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .label {
+    font-size: 0.9rem;
+  }
+
+  .game-box {
+    padding: 5px;
+  }
+
+  .game-title {
+    font-size: 1rem;
+  }
+
+  .guess-input {
+    font-size: 0.8rem;
+    padding: 6px;
+  }
+
+  .feedback-box {
+    height: 80px;
+    font-size: 0.8rem;
+  }
+
+  .tooltip {
+    font-size: 0.8rem;
+    padding: 8px;
+  }
+
+  .win-message {
+    font-size: 1.5rem;
+  }
+
+  .next-stage-message {
+    font-size: 1.2rem;
   }
 }
