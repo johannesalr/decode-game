@@ -1,0 +1,93 @@
+/* General Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  max-width: 600px;
+  width: 100%;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+/* Lobby Section */
+.lobby h2 {
+  text-align: center;
+}
+
+.lobby button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.lobby button:hover {
+  background-color: #0056b3;
+}
+
+.hidden {
+  display: none;
+}
+
+#matchLinkSection {
+  margin-top: 20px;
+}
+
+#matchLink {
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+}
+
+/* Game Section */
+#gameSection {
+  text-align: center;
+}
+
+#guessContainer {
+  margin-top: 20px;
+}
+
+#guessInput {
+  padding: 10px;
+  font-size: 16px;
+  width: 100px;
+  margin-right: 10px;
+}
+
+#submitGuessBtn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+#submitGuessBtn:hover {
+  background-color: #218838;
+}
+
+#feedbackBox {
+  margin-top: 20px;
+  white-space: pre-wrap;
+  font-size: 14px;
+}

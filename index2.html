@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Code Cracker - Multiplayer</title>
+    <link rel="stylesheet" href="styles2.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Lobby Section -->
+      <div class="lobby">
+        <h2>Multiplayer Lobby</h2>
+        <div>
+          <button id="createMatchBtn">Create Public Match</button>
+          <button id="joinMatchBtn">Join Public Match</button>
+        </div>
+        <div id="matchLinkSection" class="hidden">
+          <h3>Your Match Link:</h3>
+          <input type="text" id="matchLink" readonly />
+        </div>
+        <div id="joinMatchSection" class="hidden">
+          <h3>Enter Match ID to Join:</h3>
+          <input type="text" id="matchIdInput" />
+          <button id="joinBtn">Join Match</button>
+        </div>
+      </div>
+      <!-- Private Match -->
+      <button id="startPrivateGameBtn">Start Private Game</button>
+      <div id="privateMatchDetails"></div>
+      <a id="matchLink" href="#" target="_blank">Share match link</a>
+
+      <!-- Game Section -->
+      <div id="gameSection" class="hidden">
+        <h2>Game Started</h2>
+        <p id="gameState">Waiting for Player 2...</p>
+        <div id="guessContainer">
+          <input
+            type="text"
+            id="guessInput"
+            maxlength="4"
+            placeholder="Enter your guess"
+          />
+          <button id="submitGuessBtn">Submit Guess</button>
+        </div>
+        <div id="feedbackBox"></div>
+      </div>
+    </div>
+
+    <script type="module" src="js/script2.js"></script>
+  </body>
+</html>
