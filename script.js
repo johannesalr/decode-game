@@ -100,7 +100,7 @@ hardButton.addEventListener("click", () => {
 const allowedCharacters = {
   easy: "0123456789",
   intermediate: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-  hard: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()",
+  hard: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*()",
 };
 
 // Input Filtering Based on Mode
@@ -238,7 +238,7 @@ function generateIntermediateCode(length) {
 }
 
 function generateHardCode(length) {
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*()";
   return generateRandomCode(characters, length);
 }
 
