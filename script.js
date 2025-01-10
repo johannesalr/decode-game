@@ -3,7 +3,6 @@ const feedbackBox = document.getElementById("feedbackBox");
 
 // Game Variables
 const code = generateCode(4); // Generate a random 4-character code
-console.log("Generated code: ", code);
 let attempts = 0;
 
 // Event Listener for Enter Key
