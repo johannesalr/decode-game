@@ -41,7 +41,7 @@
         <div class="feedback-box" id="feedbackBox">
           <!-- Feedback from guesses will appear here -->
         </div>
-        <div class="how-it-works" id="howItWorks">How it works</div>
+        <div class="how-it-works" id="howItWorks">How to Play</div>
         <div class="tooltip" id="tooltip">
           <strong>How to Play:</strong>
           <p>You are trying to guess a 4-character code. After each guess:</p>
@@ -66,8 +66,22 @@
       const howItWorks = document.getElementById("howItWorks");
       const tooltip = document.getElementById("tooltip");
 
-      howItWorks.addEventListener("click", () => {
+      // Toggle tooltip visibility when clicking the "How it works" button
+      howItWorks.addEventListener("click", (event) => {
         tooltip.classList.toggle("visible");
+
+        // Prevent the document click listener from immediately closing the tooltip
+        event.stopPropagation();
+      });
+
+      // Close the tooltip when clicking outside of it
+      document.addEventListener("click", (event) => {
+        if (
+          !tooltip.contains(event.target) &&
+          !howItWorks.contains(event.target)
+        ) {
+          tooltip.classList.remove("visible");
+        }
       });
     </script>
     <script>
@@ -89,8 +103,26 @@
 
       // Add event listener for hover or click
       infoIcon.addEventListener("mouseenter", updateInfoModal);
-      infoIcon.addEventListener("click", () => {
-        infoIcon.classList.toggle("active");
+
+      // Toggle infoModal visibility when clicking the info icon
+      infoIcon.addEventListener("click", (event) => {
+        infoModal.classList.toggle("visible");
+        event.stopPropagation(); // Prevent immediate closure
+      });
+
+      // Close infoModal when clicking outside of it
+      document.addEventListener("click", (event) => {
+        if (
+          !infoModal.contains(event.target) &&
+          !infoIcon.contains(event.target)
+        ) {
+          infoModal.classList.remove("visible");
+        }
+      });
+
+      // Prevent closing the infoModal when clicking inside it
+      infoModal.addEventListener("click", (event) => {
+        event.stopPropagation();
       });
     </script>
   </body>

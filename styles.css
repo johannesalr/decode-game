@@ -188,17 +188,50 @@ body {
 .how-it-works:hover {
   text-decoration: underline;
 }
-
 .tooltip {
-  display: none;
-  background-color: #000;
-  color: #fff;
-  padding: 10px;
-  border-radius: 4px;
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 10;
+  display: none; /* Hidden by default */
+  background-color: #222; /* Dark background for contrast */
+  color: #fff; /* White text for readability */
+  padding: 15px; /* Spacing inside the tooltip */
+  border-radius: 8px; /* Smooth corners */
+  position: fixed; /* Fixed position to place it dynamically */
+  top: 10%; /* Example position; adjust as needed */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Center tooltip based on its width */
+  z-index: 9999; /* Ensure it's on top */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  font-family: Arial, sans-serif; /* Clean font */
+  max-width: 300px; /* Limit the width for a clean look */
+  text-align: left; /* Align text to the left */
+}
+
+.tooltip strong {
+  font-size: 1.2em; /* Slightly larger font for headings */
+  display: block; /* Ensures the heading takes its own line */
+  margin-bottom: 8px; /* Add spacing below the heading */
+}
+
+.tooltip p {
+  margin: 0 0 10px 0; /* Spacing between paragraphs */
+  line-height: 1.5; /* Improved readability */
+}
+
+.tooltip ul {
+  list-style-type: none; /* Remove default list styling */
+  padding: 0; /* Remove padding */
+  margin: 0; /* Remove margin */
+}
+
+.tooltip li {
+  margin-bottom: 6px; /* Space between list items */
+  font-size: 1em; /* Standard font size */
+  display: flex; /* Align icons and text nicely */
+  align-items: center;
+}
+
+.tooltip li span {
+  margin-right: 10px; /* Space between the icon and the text */
+  font-size: 1.2em; /* Slightly larger icons */
 }
 
 .tooltip.visible {
