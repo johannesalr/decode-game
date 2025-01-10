@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+    <title>Code Cracker</title>
+  </head>
+  <body>
+    <div class="top-bar">
+      <div class="label">Label</div>
+      <div class="label">Label</div>
+      <div class="label">Label</div>
+      <div class="label">Label</div>
+      <div class="label">Label</div>
+    </div>
+
+    <div class="container">
+      <div class="game-box">
+        <div class="game-title">DECODE</div>
+        <div class="game-subtitle">Guess 4 characters</div>
+        <div class="input-container">
+          <input
+            class="guess-input"
+            id="guessInput"
+            type="text"
+            maxlength="4"
+            placeholder="Value"
+          />
+        </div>
+        <div class="feedback-box" id="feedbackBox">
+          <!-- Feedback from guesses will appear here -->
+        </div>
+        <div class="how-it-works" id="howItWorks">How it works</div>
+        <div class="tooltip" id="tooltip">
+          <strong>How to Play:</strong>
+          <p>You are trying to guess a 4-character code. After each guess:</p>
+          <ul>
+            <li>
+              <span style="color: green">🟩</span> Correct character in the
+              correct position.
+            </li>
+            <li>
+              <span style="color: orange">🟨</span> Correct character but in the
+              wrong position.
+            </li>
+            <li>
+              <span style="color: black">⬛</span> Character not in the code.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const howItWorks = document.getElementById("howItWorks");
+      const tooltip = document.getElementById("tooltip");
+
+      howItWorks.addEventListener("click", () => {
+        tooltip.classList.toggle("visible");
+      });
+    </script>
+  </body>
+</html>
