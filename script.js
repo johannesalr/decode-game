@@ -3,6 +3,7 @@ const feedbackBox = document.getElementById("feedbackBox");
 
 // Game Variables
 const code = generateCode(4); // Generate a random 4-character code
+console.log("Generated code: ", code);
 let attempts = 0;
 
 // Event Listener for Enter Key
@@ -69,6 +70,13 @@ function showWinningAnimation() {
         <div class="win-message">🎉 You cracked the code! 🎉</div>
     `;
   document.body.appendChild(overlay);
+
+  setTimeout(() => {
+    overlay.style.opacity = 0; // Fade out the overlay
+    setTimeout(() => {
+      overlay.remove(); // Remove the overlay after fading out
+    }, 500); // Wait for the fade-out animation to finish (500ms)
+  }, 5000); // Delay of 5 seconds before starting to fade out
 
   // Add falling emojis
   for (let i = 0; i < 50; i++) {
