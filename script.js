@@ -1,33 +1,138 @@
+fetch("navbar.html")
+  .then((response) => response.text())
+  .then((data) => {
+    document.getElementById("navbar").innerHTML = data;
+  })
+  .catch((error) => console.error("Error loading navbar:", error));
+
 const guessInput = document.getElementById("guessInput");
 const feedbackBox = document.getElementById("feedbackBox");
 
-// Game Variables
-const code = generateCode(4); // Generate a random 4-character code
-let attempts = 0;
+// Difficulty Buttons
+const easyButton = document.getElementById("easyButton");
+const intermediateButton = document.getElementById("intermediateButton");
+const hardButton = document.getElementById("hardButton");
 
-// Event Listener for Enter Key
+document.addEventListener("DOMContentLoaded", () => {
+  // Initialize the game after the DOM is loaded
+  updateDifficultyButtons();
+});
+
+// Game Variables
+let currentMode = "easy"; // Default mode is Easy
+let code = generateEasyCode(4); // Generate a random 4-character code for Easy mode
+let attempts = 0;
+let unlockedModes = ["easy"]; // Initially, only Easy mode is unlocked
+
+console.log(`Generated Code for ${currentMode} mode: ${code}`);
+
+// Initialize Difficulty Buttons
+function updateDifficultyButtons() {
+  // Set the button text based on the unlockedModes array
+  easyButton.innerText = "Easy";
+  intermediateButton.innerText = unlockedModes.includes("intermediate")
+    ? "Intermediate"
+    : "Intermediate 🔒";
+  hardButton.innerText = unlockedModes.includes("hard") ? "Hard" : "Hard 🔒";
+
+  // Disable locked buttons
+  intermediateButton.disabled = !unlockedModes.includes("intermediate");
+  hardButton.disabled = !unlockedModes.includes("hard");
+
+  // Update styles for locked buttons
+  const buttons = [intermediateButton, hardButton];
+  buttons.forEach((button) => {
+    if (button.disabled) {
+      button.style.cursor = "not-allowed";
+      button.style.opacity = 0.5;
+      button.classList.add("locked"); // Add a CSS class for locked buttons
+    } else {
+      button.style.cursor = "pointer";
+      button.style.opacity = 1;
+      button.classList.remove("locked"); // Remove the CSS class for unlocked buttons
+    }
+  });
+}
+
+// Reset the game for the selected mode
+function resetGame(mode) {
+  currentMode = mode;
+  attempts = 0;
+  feedbackBox.innerText = "";
+
+  // Generate the code based on the mode
+  if (mode === "easy") {
+    code = generateEasyCode(4);
+  } else if (mode === "intermediate") {
+    code = generateIntermediateCode(4);
+  } else if (mode === "hard") {
+    code = generateHardCode(4);
+  }
+
+  // Re-enable input field
+  guessInput.disabled = false;
+  guessInput.value = "";
+}
+
+// Add event listeners to difficulty buttons
+easyButton.addEventListener("click", () => {
+  if (currentMode !== "easy") {
+    resetGame("easy");
+  }
+});
+
+intermediateButton.addEventListener("click", () => {
+  if (
+    unlockedModes.includes("intermediate") &&
+    currentMode !== "intermediate"
+  ) {
+    resetGame("intermediate");
+  }
+});
+
+hardButton.addEventListener("click", () => {
+  if (unlockedModes.includes("hard") && currentMode !== "hard") {
+    resetGame("hard");
+  }
+});
+
+// Allowed Characters by Mode
+const allowedCharacters = {
+  easy: "0123456789",
+  intermediate: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+  hard: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()",
+};
+
+// Input Filtering Based on Mode
+guessInput.addEventListener("input", (event) => {
+  // Get the allowed characters for the current mode
+  const allowed = allowedCharacters[currentMode];
+
+  // Normalize input (convert to uppercase)
+  const input = event.target.value.toUpperCase();
+
+  // Filter out disallowed characters
+  const filtered = input
+    .split("")
+    .filter((char) => allowed.includes(char))
+    .join("");
+
+  // Update the input field with the filtered value
+  event.target.value = filtered;
+});
+
+// Ensure input is case-insensitive during validation
 guessInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
-    const guess = guessInput.value.trim();
+    const guess = guessInput.value.trim().toUpperCase(); // Normalize to uppercase
     if (guess.length === 4) {
-      processGuess(guess);
-      guessInput.value = ""; // Clear input field
+      processGuess(guess); // Use the normalized input
+      guessInput.value = ""; // Clear the input field
     } else {
       feedbackBox.innerText += "\nEnter exactly 4 characters.";
     }
   }
 });
-
-// Function to Generate Random Code
-function generateCode(length) {
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let result = "";
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    result += characters[randomIndex];
-  }
-  return result;
-}
 
 // Function to Process the Player's Guess
 function processGuess(guess) {
@@ -54,41 +159,97 @@ function processGuess(guess) {
 
   // Check for win condition
   if (guess === code) {
-    feedbackBox.innerText += "\n🎉 You cracked the code!";
+    feedbackBox.innerText += "\n🎉 You've cracked the code!";
     guessInput.disabled = true; // Disable input after winning
-
-    // Trigger animation and message
+    unlockNextMode();
     showWinningAnimation();
   }
 }
+
+// Unlock the next mode after a win
+function unlockNextMode() {
+  if (currentMode === "easy" && !unlockedModes.includes("intermediate")) {
+    unlockedModes.push("intermediate");
+  } else if (
+    currentMode === "intermediate" &&
+    !unlockedModes.includes("hard")
+  ) {
+    unlockedModes.push("hard");
+  }
+  updateDifficultyButtons();
+}
+
+// Function to Show Winning Animation
 function showWinningAnimation() {
-  // Show big congratulatory message
   const overlay = document.createElement("div");
   overlay.id = "win-overlay";
+
+  // Determine the unlocked stage message
+  let nextStageMessage = "";
+  if (currentMode === "easy") {
+    nextStageMessage = "Intermediate stage unlocked! 🚀";
+  } else if (currentMode === "intermediate") {
+    nextStageMessage = "Hard stage unlocked! 🌟";
+  } else if (currentMode === "hard") {
+    nextStageMessage = "You've completed the final stage! 🎉";
+  }
+
+  // Overlay content
   overlay.innerHTML = `
-        <div class="win-message">🎉 You cracked the code! 🎉</div>
-    `;
+  <div class="win-message">
+    🎉 You've cracked the code! 🎉
+    <br />
+    <div class="next-stage-message">${nextStageMessage}</div>
+  </div>
+      `;
+
+  // Append the overlay to the document body
   document.body.appendChild(overlay);
 
   setTimeout(() => {
-    overlay.style.opacity = 0; // Fade out the overlay
+    overlay.style.opacity = 0;
     setTimeout(() => {
-      overlay.remove(); // Remove the overlay after fading out
-    }, 500); // Wait for the fade-out animation to finish (500ms)
-  }, 5000); // Delay of 5 seconds before starting to fade out
+      overlay.remove();
+    }, 500);
+  }, 2500);
 
-  // Add falling emojis
   for (let i = 0; i < 50; i++) {
     const emoji = document.createElement("div");
     emoji.className = "falling-emoji";
     emoji.innerText = "🎉";
     emoji.style.left = Math.random() * 100 + "vw";
-    emoji.style.animationDuration = Math.random() * 2 + 3 + "s"; // Random speed
+    emoji.style.animationDuration = Math.random() * 2 + 3 + "s";
     document.body.appendChild(emoji);
-
-    // Remove emoji after animation
     emoji.addEventListener("animationend", () => {
       emoji.remove();
     });
   }
 }
+
+// Difficulty-specific Code Generators
+function generateEasyCode(length) {
+  const characters = "0123456789";
+  return generateRandomCode(characters, length);
+}
+
+function generateIntermediateCode(length) {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  return generateRandomCode(characters, length);
+}
+
+function generateHardCode(length) {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+  return generateRandomCode(characters, length);
+}
+
+function generateRandomCode(characters, length) {
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters[randomIndex];
+  }
+  return result;
+}
+
+// Initialize the game
+updateDifficultyButtons();

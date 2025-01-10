@@ -8,18 +8,30 @@
     <title>Code Cracker</title>
   </head>
   <body>
-    <div class="top-bar">
-      <div class="label">Label</div>
-      <div class="label">Label</div>
-      <div class="label">Label</div>
-      <div class="label">Label</div>
-      <div class="label">Label</div>
-    </div>
-
+    <div id="navbar"></div>
     <div class="container">
       <div class="game-box">
+        <div class="difficulty-navbar">
+          <div id="easyButton" class="difficulty-button">Easy</div>
+          <div id="intermediateButton" class="difficulty-button">
+            Intermediate 🔒
+          </div>
+          <div id="hardButton" class="difficulty-button">Hard 🔒</div>
+        </div>
         <div class="game-title">DECODE</div>
-        <div class="game-subtitle">Guess 4 characters</div>
+        <div class="game-subtitle">
+          Guess 4 characters
+          <div class="info-icon" id="infoIcon">
+            <img
+              src="/assets/icon/info-icon.png"
+              alt="Info"
+              class="info-icon"
+            />
+            <div class="info-modal" id="infoModal">
+              Set of characters: 1234567890
+            </div>
+          </div>
+        </div>
         <div class="input-container">
           <input
             class="guess-input"
@@ -59,6 +71,29 @@
 
       howItWorks.addEventListener("click", () => {
         tooltip.classList.toggle("visible");
+      });
+    </script>
+    <script>
+      const infoIcon = document.getElementById("infoIcon");
+      const infoModal = document.getElementById("infoModal");
+
+      // Update the modal content based on the current mode
+      function updateInfoModal() {
+        let characters = "";
+        if (currentMode === "easy") {
+          characters = "1234567890";
+        } else if (currentMode === "intermediate") {
+          characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        } else if (currentMode === "hard") {
+          characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()";
+        }
+        infoModal.innerText = `Set of characters: ${characters}`;
+      }
+
+      // Add event listener for hover or click
+      infoIcon.addEventListener("mouseenter", updateInfoModal);
+      infoIcon.addEventListener("click", () => {
+        infoIcon.classList.toggle("active");
       });
     </script>
   </body>
