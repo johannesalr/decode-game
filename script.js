@@ -2,7 +2,27 @@ fetch("navbar.html")
   .then((response) => response.text())
   .then((data) => {
     document.getElementById("navbar").innerHTML = data;
+
+    // Attach event listeners after the navbar is loaded
+    const hamburgerMenu = document.getElementById("hamburgerMenu");
+    const navMenu = document.getElementById("navMenu");
+
+    hamburgerMenu.addEventListener("click", () => {
+      navMenu.classList.toggle("active");
+    });
+    document.addEventListener("click", (event) => {
+      const navMenu = document.getElementById("navMenu");
+      const hamburgerMenu = document.getElementById("hamburgerMenu");
+
+      if (
+        !navMenu.contains(event.target) &&
+        !hamburgerMenu.contains(event.target)
+      ) {
+        navMenu.classList.remove("active");
+      }
+    });
   })
+
   .catch((error) => console.error("Error loading navbar:", error));
 
 const guessInput = document.getElementById("guessInput");
@@ -12,6 +32,8 @@ const feedbackBox = document.getElementById("feedbackBox");
 const easyButton = document.getElementById("easyButton");
 const intermediateButton = document.getElementById("intermediateButton");
 const hardButton = document.getElementById("hardButton");
+
+let isTimerStarted = false; // Flag to track if the timer has started
 
 document.addEventListener("DOMContentLoaded", () => {
   // Initialize the game after the DOM is loaded
@@ -131,6 +153,7 @@ guessInput.addEventListener("keydown", (event) => {
     } else {
       feedbackBox.innerText += "\nEnter exactly 4 characters.";
     }
+    handleUserGuess();
   }
 });
 
@@ -141,7 +164,6 @@ function processGuess(guess) {
   const codeArray = code.split("");
   const guessArray = guess.split("");
 
-  // Create feedback using emojis
   guessArray.forEach((char, index) => {
     if (char === codeArray[index]) {
       feedback += "🟩"; // Correct character and position
@@ -153,8 +175,6 @@ function processGuess(guess) {
   });
 
   feedbackBox.innerText = feedbackBox.innerText.trim();
-
-  // Append feedback to the feedback box
   feedbackBox.innerText += `\nAttempt ${attempts}: ${guess} ${feedback}`;
 
   // Check for win condition
@@ -163,6 +183,11 @@ function processGuess(guess) {
     guessInput.disabled = true; // Disable input after winning
     unlockNextMode();
     showWinningAnimation();
+
+    // Stop the timer if it's hard mode
+    if (currentMode === "hard") {
+      gameTimer.stop(); // Stop the timer and log the duration
+    }
   }
 }
 
@@ -249,6 +274,68 @@ function generateRandomCode(characters, length) {
     result += characters[randomIndex];
   }
   return result;
+}
+function handleUserGuess() {
+  const guess = guessInput.value.trim().toUpperCase(); // Get the user's guess
+
+  if (!isTimerStarted) {
+    gameTimer.start(); // Start the timer
+    isTimerStarted = true; // Ensure the timer starts only once
+  }
+
+  console.log("User guessed:", guess);
+}
+
+// Timer Functionality
+
+const gameTimer = {
+  startTime: null,
+
+  start() {
+    this.startTime = new Date().getTime();
+    localStorage.setItem("gameStartTime", this.startTime);
+    console.log("Timer started at:", new Date(this.startTime));
+    // Start displaying the timer
+    displayTimer();
+  },
+
+  stop() {
+    if (!this.startTime) {
+      console.error("Timer was never started.");
+      return;
+    }
+
+    const endTime = new Date().getTime();
+    const duration = endTime - this.startTime;
+    localStorage.removeItem("gameStartTime");
+    console.log("Timer stopped at:", new Date(endTime));
+    console.log(`Total duration: ${Math.floor(duration / 1000)} seconds`);
+
+    this.startTime = null;
+
+    // Clear the timer display
+    clearInterval(timerInterval);
+
+    return duration; // Return the total duration if needed
+  },
+};
+function displayTimer() {
+  const startTime = gameTimer.startTime;
+  if (!startTime) return;
+
+  const timerElement = document.getElementById("timer");
+  if (!timerElement) return;
+
+  timerInterval = setInterval(() => {
+    const currentTime = new Date().getTime();
+    const elapsedTime = currentTime - startTime;
+
+    const hours = Math.floor(elapsedTime / (1000 * 60 * 60));
+    const minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
+
+    timerElement.textContent = `Time Elapsed: ${hours}h ${minutes}m ${seconds}s`;
+  }, 1000);
 }
 
 // Initialize the game
