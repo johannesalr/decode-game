@@ -187,6 +187,7 @@ function processGuess(guess) {
     // Stop the timer if it's hard mode
     if (currentMode === "hard") {
       gameTimer.stop(); // Stop the timer and log the duration
+      completeAllModes(); // Mark all stages as completed
     }
   }
 }
@@ -336,6 +337,14 @@ function displayTimer() {
 
     timerElement.textContent = `Time Elapsed: ${hours}h ${minutes}m ${seconds}s`;
   }, 1000);
+}
+// Daily Challenge Logic
+function completeAllModes() {
+  localStorage.setItem("gameCompleted", "true");
+
+  feedbackBox.innerText +=
+    "\n🎉 You've completed all stages! Come back tomorrow to play again!";
+  guessInput.disabled = true; // Disable input
 }
 
 // Initialize the game
