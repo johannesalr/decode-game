@@ -1,18 +1,41 @@
-// Fetch and inject the navbar
-// Initialize Firebase
-const initializeFirebase = () => {
-  const firebaseConfig = {
-    apiKey: "AIzaSyAdsGvCiy4SWnZGvCQa3_dtGI-UBZxvxbc",
-    authDomain: "decode-b0f83.firebaseapp.com",
-    projectId: "decode-b0f83",
-    storageBucket: "decode-b0f83.firebasestorage.app",
-    messagingSenderId: "814070232321",
-    appId: "1:814070232321:web:58c1502f8d5e0a15bbd700",
-    measurementId: "G-WR3W3XVD0R",
-  };
+import { auth } from "./firebase.js"; // Import auth from firebase.js
+import { doc, setDoc } from "./firebase.js"; // Import Firestore functions
+import { db } from "./firebase.js"; // Import the Firestore instance
 
-  const app = firebase.initializeApp(firebaseConfig);
-  return firebase.auth();
+// Save user data to Firestore
+const saveUserProfile = async (user) => {
+  const userRef = doc(db, "users", user.uid); // Use the user's UID as the document ID
+  await setDoc(userRef, {
+    uid: user.uid,
+    displayName: user.displayName || "Anonymous",
+    photoURL: user.photoURL || "https://placehold.co/35x35",
+    email: user.email,
+    createdAt: serverTimestamp(), // Automatically set the current server time
+  });
+  console.log("User profile saved to Firestore:", user.uid);
+};
+
+// Fetch user data from Firestore
+const fetchUserProfile = async (uid) => {
+  try {
+    // Reference the user's document in Firestore
+    const userRef = doc(db, "users", uid);
+
+    // Fetch the document
+    const userDoc = await getDoc(userRef);
+
+    // Check if the document exists
+    if (userDoc.exists()) {
+      // Return the user's data
+      return userDoc.data();
+    } else {
+      // Throw an error if the document doesn't exist
+      throw new Error("User not found");
+    }
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    throw error; // Re-throw the error for handling in the calling function
+  }
 };
 
 // Handle profile picture
@@ -33,11 +56,6 @@ const handleProfilePicture = (user, profilePicture) => {
       console.log("Profile picture loaded successfully!");
       profilePicture.style.display = "block"; // Show the picture after it loads
     };
-    // profilePicture.onerror = () => {
-    //   console.error("Failed to load profile picture. Using fallback image.");
-    //   profilePicture.src = imageUrl; // Fallback image
-    //   profilePicture.style.display = "block"; // Show the fallback image
-    // };
   } else {
     console.log("No photoURL available. Using fallback image."); // Debugging: Log missing photoURL
     // Use a default placeholder if no photo URL is available
@@ -59,6 +77,9 @@ const handleAuthState = (auth, profilePicture, logSection) => {
 
       // Set the profile picture
       handleProfilePicture(user, profilePicture);
+
+      // Save user data to Firestore
+      saveUserProfile(user);
     } else {
       // User is signed out
       console.log("No user is signed in."); // Debugging: Log sign-out state
@@ -126,9 +147,6 @@ const initializeApp = () => {
     .then((data) => {
       document.getElementById("navbar").innerHTML = data;
 
-      // Initialize Firebase
-      const auth = initializeFirebase();
-
       // DOM elements
       const profileContainer = document.querySelector(".profile-container");
       const profilePicture = document.getElementById("profile-picture");
@@ -137,7 +155,7 @@ const initializeApp = () => {
       const signOutButton = document.getElementById("sign-out-button");
 
       // Handle authentication state changes
-      handleAuthState(auth, profilePicture, logSection);
+      handleAuthState(auth, profilePicture, logSection); // Use the imported auth
 
       // Handle premium button click
       handlePremiumButton(premiumButton);
@@ -156,6 +174,8 @@ const initializeApp = () => {
 
 // Initialize the app when the DOM is ready
 document.addEventListener("DOMContentLoaded", initializeApp);
+
+export { fetchUserProfile }; // Export the fetchUserProfile function
 
 const guessInput = document.getElementById("guessInput");
 const feedbackBox = document.getElementById("feedbackBox");
