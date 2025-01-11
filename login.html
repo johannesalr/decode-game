@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="navbar.css" />
+    <title>Login / Sign Up</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: #f4f4f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .auth-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Center-align children horizontally */
+      }
+
+      .auth-form {
+        width: 100%; /* Ensure the form takes full width */
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Center-align form inputs */
+      }
+
+      input {
+        width: 100%; /* Ensure inputs take full width of the form */
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+        max-width: 280px; /* Limit input width for better alignment */
+      }
+
+      /* .auth-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        text-align: center;
+      } */
+
+      h1 {
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+        color: #333;
+      }
+
+      /* input {
+        width: 100%;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+      } */
+
+      button {
+        width: 100%;
+        padding: 0.75rem;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-bottom: 0.5rem;
+      }
+
+      .email-btn {
+        background-color: #007bff;
+        color: white;
+      }
+
+      .gsi-material-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 10px;
+        cursor: pointer;
+        font-size: 14px;
+        color: #3c4043;
+        transition: background-color 0.3s ease;
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+
+      .gsi-material-button:hover {
+        background-color: #f8f9fa;
+      }
+
+      .gsi-material-button-content-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px; /* Adds space between the icon and text */
+      }
+
+      .gsi-material-button-icon {
+        display: flex;
+        align-items: center;
+      }
+
+      .gsi-material-button-icon svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .gsi-material-button-contents {
+        font-weight: 500;
+      }
+
+      .toggle-mode {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: #007bff;
+        cursor: pointer;
+      }
+
+      .toggle-mode:hover {
+        text-decoration: underline;
+      }
+      .message {
+        width: 100%;
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        text-align: center;
+        display: none; /* Hidden by default */
+      }
+
+      .message.error {
+        background-color: #ffebee; /* Light red background for errors */
+        color: #c62828; /* Dark red text for errors */
+      }
+
+      .message.success {
+        background-color: #e8f5e9; /* Light green background for success */
+        color: #2e7d32; /* Dark green text for success */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <div id="navbar"></div> -->
+    <div class="auth-container">
+      <h1 id="title">Login</h1>
+      <form id="auth-form" class="auth-form">
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <!-- Add a second password input for confirmation -->
+        <input
+          type="password"
+          id="confirm-password"
+          placeholder="Confirm Password"
+          required
+          style="display: none"
+        />
+        <!-- Message container -->
+        <div id="message" class="message"></div>
+        <button type="submit" class="email-btn" id="auth-btn">Login</button>
+      </form>
+
+      <!-- Google Sign-In Button -->
+      <button class="gsi-material-button" id="google-signin-btn">
+        <div class="gsi-material-button-state"></div>
+        <div class="gsi-material-button-content-wrapper">
+          <div class="gsi-material-button-icon">
+            <svg
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              style="display: block"
+            >
+              <path
+                fill="#EA4335"
+                d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+              ></path>
+              <path
+                fill="#4285F4"
+                d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+              ></path>
+              <path
+                fill="#FBBC05"
+                d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+              ></path>
+              <path
+                fill="#34A853"
+                d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+              ></path>
+              <path fill="none" d="M0 0h48v48H0z"></path>
+            </svg>
+          </div>
+          <span class="gsi-material-button-contents">Sign in with Google</span>
+        </div>
+      </button>
+
+      <div class="toggle-mode" id="toggle-mode">
+        Don't have an account? Sign Up
+      </div>
+    </div>
+    <!-- Firebase SDK -->
+    <script type="module">
+      // Import Firebase modules
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+      import {
+        getAuth,
+        signInWithEmailAndPassword,
+        createUserWithEmailAndPassword,
+        GoogleAuthProvider,
+        signInWithPopup,
+      } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyAdsGvCiy4SWnZGvCQa3_dtGI-UBZxvxbc",
+        authDomain: "decode-b0f83.firebaseapp.com",
+        projectId: "decode-b0f83",
+        storageBucket: "decode-b0f83.firebasestorage.app",
+        messagingSenderId: "814070232321",
+        appId: "1:814070232321:web:58c1502f8d5e0a15bbd700",
+        measurementId: "G-WR3W3XVD0R",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      // DOM elements
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+      const confirmPasswordInput = document.getElementById("confirm-password");
+      const authForm = document.getElementById("auth-form");
+      const authButton = document.getElementById("auth-btn");
+      const googleSignInButton = document.getElementById("google-signin-btn");
+      const toggleMode = document.getElementById("toggle-mode");
+      const title = document.getElementById("title");
+      const message = document.getElementById("message");
+
+      let isLoginMode = true;
+
+      // Function to display messages
+      const showMessage = (text, isError = true) => {
+        message.textContent = text;
+        message.className = `message ${isError ? "error" : "success"}`;
+        message.style.display = "block"; // Show the message
+
+        // Hide the message after 3 seconds
+        setTimeout(() => {
+          message.style.display = "none";
+        }, 3000);
+      };
+
+      // Function to update the UI based on the mode
+      const updateUI = () => {
+        if (isLoginMode) {
+          // Login mode
+          title.innerText = "Login";
+          authButton.innerText = "Login";
+          toggleMode.innerText = "Don't have an account? Sign Up";
+          confirmPasswordInput.style.display = "none"; // Hide confirm password field
+        } else {
+          // Sign Up mode
+          title.innerText = "Sign Up";
+          authButton.innerText = "Sign Up";
+          toggleMode.innerText = "Already have an account? Login";
+          confirmPasswordInput.style.display = "block"; // Show confirm password field
+        }
+      };
+
+      // Toggle between Login and Sign Up
+      toggleMode.addEventListener("click", () => {
+        isLoginMode = !isLoginMode; // Toggle the mode
+        updateUI(); // Update the UI
+      });
+
+      // Handle form submission
+      authForm.addEventListener("submit", (e) => {
+        e.preventDefault(); // Prevent the form from submitting
+
+        const email = emailInput.value;
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+
+        if (isLoginMode) {
+          // Login
+          signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+              showMessage("Logged in successfully!", false); // Success message
+              window.location.href = "index.html"; // Redirect to the home page
+            })
+            .catch((error) => {
+              showMessage("Error: " + error.message); // Error message
+            });
+        } else {
+          // Sign Up
+          // Validate password
+          if (password.length < 8) {
+            showMessage("Password must be at least 8 characters long.");
+            return;
+          }
+
+          if (password !== confirmPassword) {
+            showMessage("Passwords do not match.");
+            return;
+          }
+
+          // Create user
+          createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+              showMessage("Account created successfully!", false); // Success message
+              window.location.href = "index.html"; // Redirect to the home page
+            })
+            .catch((error) => {
+              showMessage("Error: " + error.message); // Error message
+            });
+        }
+      });
+
+      // Google Sign-In
+      googleSignInButton.addEventListener("click", () => {
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(auth, provider)
+          .then((result) => {
+            showMessage("Signed in with Google successfully!", false); // Success message
+            window.location.href = "index.html"; // Redirect to the home page
+            console.log("User:", result.user);
+          })
+          .catch((error) => {
+            showMessage("Error: " + error.message); // Error message
+          });
+      });
+
+      // Initialize the UI in Login mode
+      updateUI();
+    </script>
+  </body>
+</html>

@@ -12,7 +12,8 @@
     <title>Code Cracker</title>
   </head>
   <body>
-    <div id="navbar"></div>
+      <div id="navbar"></div>
+    <div class="container">
     <div class="container">
       <div id="timer">Time Elapsed: 0h 0m 0s</div>
       <div class="game-box">
@@ -66,7 +67,10 @@
         </div>
       </div>
     </div>
-
+    <!-- Firebase SDK v9 (compatibility version) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <!-- Info-Icon and How to Play buttons -->
     <script>
       const howItWorks = document.getElementById("howItWorks");
       const tooltip = document.getElementById("tooltip");

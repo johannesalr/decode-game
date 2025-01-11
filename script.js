@@ -1,29 +1,161 @@
-fetch("navbar.html")
-  .then((response) => response.text())
-  .then((data) => {
-    document.getElementById("navbar").innerHTML = data;
+// Fetch and inject the navbar
+// Initialize Firebase
+const initializeFirebase = () => {
+  const firebaseConfig = {
+    apiKey: "AIzaSyAdsGvCiy4SWnZGvCQa3_dtGI-UBZxvxbc",
+    authDomain: "decode-b0f83.firebaseapp.com",
+    projectId: "decode-b0f83",
+    storageBucket: "decode-b0f83.firebasestorage.app",
+    messagingSenderId: "814070232321",
+    appId: "1:814070232321:web:58c1502f8d5e0a15bbd700",
+    measurementId: "G-WR3W3XVD0R",
+  };
 
-    // Attach event listeners after the navbar is loaded
-    const hamburgerMenu = document.getElementById("hamburgerMenu");
-    const navMenu = document.getElementById("navMenu");
+  const app = firebase.initializeApp(firebaseConfig);
+  return firebase.auth();
+};
 
-    hamburgerMenu.addEventListener("click", () => {
-      navMenu.classList.toggle("active");
+// Handle profile picture
+const handleProfilePicture = (user, profilePicture) => {
+  if (user.photoURL) {
+    console.log("User photoURL:", user.photoURL); // Debugging: Log the photoURL
+
+    // Use the photoURL as-is without adding cache-busting parameters
+    const imageUrl = user.photoURL;
+
+    console.log("Setting image URL:", imageUrl); // Debugging: Log the image URL
+
+    // Set the src attribute
+    profilePicture.src = imageUrl;
+
+    // Handle image loading and errors
+    profilePicture.onload = () => {
+      console.log("Profile picture loaded successfully!");
+      profilePicture.style.display = "block"; // Show the picture after it loads
+    };
+    // profilePicture.onerror = () => {
+    //   console.error("Failed to load profile picture. Using fallback image.");
+    //   profilePicture.src = imageUrl; // Fallback image
+    //   profilePicture.style.display = "block"; // Show the fallback image
+    // };
+  } else {
+    console.log("No photoURL available. Using fallback image."); // Debugging: Log missing photoURL
+    // Use a default placeholder if no photo URL is available
+    profilePicture.src = "https://placehold.co/35x35";
+    profilePicture.style.display = "block"; // Show the fallback image
+  }
+};
+
+// Handle authentication state changes
+const handleAuthState = (auth, profilePicture, logSection) => {
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      // User is signed in
+      console.log("User object:", user); // Debugging: Log the entire user object
+      document.body.classList.add("logged-in"); // Add class to body
+
+      // Hide the log-section (login/signup buttons)
+      if (logSection) logSection.style.display = "none";
+
+      // Set the profile picture
+      handleProfilePicture(user, profilePicture);
+    } else {
+      // User is signed out
+      console.log("No user is signed in."); // Debugging: Log sign-out state
+      document.body.classList.remove("logged-in"); // Remove class from body
+
+      // Show the log-section (login/signup buttons)
+      if (logSection) logSection.style.display = "flex";
+
+      // Hide the profile picture
+      profilePicture.style.display = "none";
+    }
+  });
+};
+
+// Handle premium button click
+const handlePremiumButton = (premiumButton) => {
+  if (premiumButton) {
+    premiumButton.addEventListener("click", () => {
+      // Redirect to a premium purchase page
+      window.location.href = "premium.html"; // Replace with your actual URL
     });
-    document.addEventListener("click", (event) => {
-      const navMenu = document.getElementById("navMenu");
-      const hamburgerMenu = document.getElementById("hamburgerMenu");
+  }
+};
 
-      if (
-        !navMenu.contains(event.target) &&
-        !hamburgerMenu.contains(event.target)
-      ) {
-        navMenu.classList.remove("active");
-      }
+// Handle profile picture click (toggle dropdown)
+const handleProfilePictureClick = (profilePicture, profileContainer) => {
+  if (profilePicture) {
+    profilePicture.addEventListener("click", (event) => {
+      event.stopPropagation(); // Prevent the click from closing the dropdown immediately
+      profileContainer.classList.toggle("active");
     });
-  })
+  }
+};
 
-  .catch((error) => console.error("Error loading navbar:", error));
+// Handle sign-out button click
+const handleSignOutButton = (signOutButton, auth, profileContainer) => {
+  if (signOutButton) {
+    signOutButton.addEventListener("click", () => {
+      auth
+        .signOut()
+        .then(() => {
+          profileContainer.classList.remove("active");
+        })
+        .catch((error) => {
+          console.error("Error signing out:", error);
+        });
+    });
+  }
+};
+
+// Close dropdown menu when clicking outside of it
+const handleDropdownClose = (profileContainer) => {
+  document.addEventListener("click", (event) => {
+    if (!profileContainer.contains(event.target)) {
+      profileContainer.classList.remove("active");
+    }
+  });
+};
+
+// Main function to initialize the app
+const initializeApp = () => {
+  // Fetch and inject the navbar
+  fetch("navbar.html")
+    .then((response) => response.text())
+    .then((data) => {
+      document.getElementById("navbar").innerHTML = data;
+
+      // Initialize Firebase
+      const auth = initializeFirebase();
+
+      // DOM elements
+      const profileContainer = document.querySelector(".profile-container");
+      const profilePicture = document.getElementById("profile-picture");
+      const logSection = document.querySelector(".log-section");
+      const premiumButton = document.getElementById("premium-button");
+      const signOutButton = document.getElementById("sign-out-button");
+
+      // Handle authentication state changes
+      handleAuthState(auth, profilePicture, logSection);
+
+      // Handle premium button click
+      handlePremiumButton(premiumButton);
+
+      // Handle profile picture click
+      handleProfilePictureClick(profilePicture, profileContainer);
+
+      // Handle sign-out button click
+      handleSignOutButton(signOutButton, auth, profileContainer);
+
+      // Handle dropdown close
+      handleDropdownClose(profileContainer);
+    })
+    .catch((error) => console.error("Error loading navbar:", error));
+};
+
+// Initialize the app when the DOM is ready
+document.addEventListener("DOMContentLoaded", initializeApp);
 
 const guessInput = document.getElementById("guessInput");
 const feedbackBox = document.getElementById("feedbackBox");
@@ -222,12 +354,12 @@ function showWinningAnimation() {
 
   // Overlay content
   overlay.innerHTML = `
-  <div class="win-message">
-    🎉 You've cracked the code! 🎉
-    <br />
-    <div class="next-stage-message">${nextStageMessage}</div>
-  </div>
-      `;
+    <div class="win-message">
+      🎉 You've cracked the code! 🎉
+      <br />
+      <div class="next-stage-message">${nextStageMessage}</div>
+    </div>
+        `;
 
   // Append the overlay to the document body
   document.body.appendChild(overlay);
@@ -337,14 +469,6 @@ function displayTimer() {
 
     timerElement.textContent = `Time Elapsed: ${hours}h ${minutes}m ${seconds}s`;
   }, 1000);
-}
-// Daily Challenge Logic
-function completeAllModes() {
-  localStorage.setItem("gameCompleted", "true");
-
-  feedbackBox.innerText +=
-    "\n🎉 You've completed all stages! Come back tomorrow to play again!";
-  guessInput.disabled = true; // Disable input
 }
 
 // Initialize the game

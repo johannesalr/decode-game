@@ -1,11 +1,25 @@
-<div class="nav-container">
-  <div class="top-bar">
-    <button class="hamburger-menu" id="hamburgerMenu">☰</button>
-    <nav class="nav-menu" id="navMenu">
-      <a href="index.html" class="nav-link">Home</a>
-      <a href="multiplayer.html" class="nav-link">Multiplayer</a>
-      <a href="#services" class="nav-link">Services</a>
-      <a href="#contact" class="nav-link">Contact</a>
-    </nav>
+<header>
+  <!-- Hamburger menu on the far left -->
+  <button id="hamburgerMenu" class="hamburger-menu">☰</button>
+  <div class="game-name">Code Cracker</div>
+  <!-- Navigation menu -->
+  <nav id="navMenu" class="nav-menu">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="about.html" class="nav-link">About</a>
+    <a href="contact.html" class="nav-link">Contact</a>
+  </nav>
+  <!-- Log section (login/signup buttons) -->
+  <div class="log-section">
+    <a href="login.html"><button>Log In</button></a>
+    <a href="login.html"><button>Sign Up</button></a>
   </div>
-</div>
+  <!-- Profile picture on the far right -->
+  <div class="profile-container">
+    <button id="premium-button" class="premium-button">Buy Premium</button>
+    <img id="profile-picture" class="profile-picture" src="" alt="Profile" />
+    <div class="dropdown-menu">
+      <button id="profile-button">Profile</button>
+      <button id="sign-out-button">Sign Out</button>
+    </div>
+  </div>
+</header>
