@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="script.js"></script>
+    <title>Code Cracker</title>
+  </head>
+  <body>
+      <div id="navbar"></div>
+    <div class="container">
+    <div class="container">
+      <div id="timer">Time Elapsed: 0h 0m 0s</div>
+      <div class="game-box">
+        <div class="difficulty-navbar">
+          <div id="easyButton" class="difficulty-button">Easy</div>
+          <div id="intermediateButton" class="difficulty-button">
+            Intermediate 🔒
+          </div>
+          <div id="hardButton" class="difficulty-button">Hard 🔒</div>
+        </div>
+        <div class="game-title">DECODE</div>
+        <div class="game-subtitle">
+          Guess 4 characters
+          <div class="info-icon" id="infoIcon">
+            <img src="/my-app/src/assets/info-icon.png" alt="Info" class="info-icon" />
+            <div class="info-modal" id="infoModal">
+              Set of characters: 1234567890
+            </div>
+          </div>
+        </div>
+        <div class="input-container">
+          <input
+            class="guess-input"
+            id="guessInput"
+            type="text"
+            maxlength="4"
+            placeholder="Enter 4 characters"
+            autocomplete="off"
+          />
+        </div>
+        <div class="feedback-box" id="feedbackBox">
+          <!-- Feedback from guesses will appear here -->
+        </div>
+        <div class="how-it-works" id="howItWorks">How to Play</div>
+        <div class="tooltip" id="tooltip">
+          <strong>How to Play:</strong>
+          <p>You are trying to guess a 4-character code. After each guess:</p>
+          <ul>
+            <li>
+              <span style="color: green">🟩</span> Correct character in the
+              correct position.
+            </li>
+            <li>
+              <span style="color: orange">🟨</span> Correct character but in the
+              wrong position.
+            </li>
+            <li>
+              <span style="color: black">⬛</span> Character not in the code.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Firebase SDK v9 (compatibility version) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <!-- Info-Icon and How to Play buttons -->
+    <script>
+      const howItWorks = document.getElementById("howItWorks");
+      const tooltip = document.getElementById("tooltip");
+
+      // Toggle tooltip visibility when clicking the "How it works" button
+      howItWorks.addEventListener("click", (event) => {
+        tooltip.classList.toggle("visible");
+
+        // Prevent the document click listener from immediately closing the tooltip
+        event.stopPropagation();
+      });
+
+      // Close the tooltip when clicking outside of it
+      document.addEventListener("click", (event) => {
+        if (
+          !tooltip.contains(event.target) &&
+          !howItWorks.contains(event.target)
+        ) {
+          tooltip.classList.remove("visible");
+        }
+      });
+    </script>
+    <script>
+      const infoIcon = document.getElementById("infoIcon");
+      const infoModal = document.getElementById("infoModal");
+
+      // Update the modal content based on the current mode
+      function updateInfoModal() {
+        let characters = "";
+        if (currentMode === "easy") {
+          characters = "1234567890";
+        } else if (currentMode === "intermediate") {
+          characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        } else if (currentMode === "hard") {
+          characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()";
+        }
+        infoModal.innerText = `Set of characters: ${characters}`;
+      }
+
+      // Add event listener for hover or click
+      infoIcon.addEventListener("mouseenter", updateInfoModal);
+
+      // Toggle infoModal visibility when clicking the info icon
+      infoIcon.addEventListener("click", (event) => {
+        infoModal.classList.toggle("visible");
+        event.stopPropagation(); // Prevent immediate closure
+      });
+
+      // Close infoModal when clicking outside of it
+      document.addEventListener("click", (event) => {
+        if (
+          !infoModal.contains(event.target) &&
+          !infoIcon.contains(event.target)
+        ) {
+          infoModal.classList.remove("visible");
+        }
+      });
+
+      // Prevent closing the infoModal when clicking inside it
+      infoModal.addEventListener("click", (event) => {
+        event.stopPropagation();
+      });
+    </script>
+  </body>
+</html>

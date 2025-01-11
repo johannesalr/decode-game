@@ -1,35 +1,34 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// src/App.jsx
+import { useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { auth } from "./firebase";
+import { saveUserProfile } from "./script.js";
+import HomePage from "./components/HomePage"; // Import your HomePage component
+import ProfilePage from "./components/ProfilePage"; // Import your ProfilePage component
 
 function App() {
-  const [count, setCount] = useState(0)
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        console.log("User signed in:", user);
+        saveUserProfile(user); // Save user data to Firestore
+      } else {
+        console.log("No user signed in.");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Router>
+      <Routes>
+        {/* Define your routes here */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/profile/:uid" element={<ProfilePage />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
